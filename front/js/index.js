@@ -11,33 +11,35 @@ function items() {
         const newDiv = document.createElement("div");
         let elt = document.getElementById("items");
         elt.appendChild(newDiv);
-          
-        newDiv.append(couch.altTxt);
+    
 
-        // Boucle couleurs
-        const newSelect = document.createElement("select");
-        elt.appendChild(newSelect);
-        
-        couch.colors.forEach(color => {
-            const newOption = document.createElement("option");
-            newSelect.appendChild(newOption);
-            newOption.append(color);
-        })
+        // Description
         
         const newDescription = document.createElement("p")
-        elt.appendChild(newDescription);
         newDescription.append(couch.description);
+        newDiv.appendChild(newDescription);
+        
 
-        document.getElementById("items").innerHTML
-        += '<img src="'+couch.imageUrl+'">'
+        // Image
+
+        var image = document.createElement("img");
+        image.src = couch.imageUrl;
+        image.alt = couch.altTxt
+        newDiv.appendChild(image);
+        
+
+        // Nom
 
         const newName = document.createElement("p")
-        elt.appendChild(newName);
         newName.append(couch.name);
+        newDiv.appendChild(newName);
+
+        // Prix
 
         const newPrice = document.createElement("p")
-        elt.appendChild(newPrice);
         newPrice.append(couch.price + '€');
+        newDiv.appendChild(newPrice);
+        
         
         })
         });
