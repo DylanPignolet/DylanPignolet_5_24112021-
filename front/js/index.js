@@ -8,16 +8,11 @@ function items() {
         console.log(response2)
         // Boucle response sur canapés
         response2.forEach(couch => {
-        const newDiv = document.createElement("div");
+        const newHover = document.createElement("a")
+        const newArticle = document.createElement("article");
         let elt = document.getElementById("items");
-        elt.appendChild(newDiv);
-    
-
-        // Description
-        
-        const newDescription = document.createElement("p")
-        newDescription.append(couch.description);
-        newDiv.appendChild(newDescription);
+        elt.appendChild(newHover);
+        newHover.appendChild(newArticle);
         
 
         // Image
@@ -25,20 +20,26 @@ function items() {
         var image = document.createElement("img");
         image.src = couch.imageUrl;
         image.alt = couch.altTxt
-        newDiv.appendChild(image);
+        newArticle.appendChild(image);
         
 
         // Nom
 
-        const newName = document.createElement("p")
+        const newName = document.createElement("h3")
         newName.append(couch.name);
-        newDiv.appendChild(newName);
+        newArticle.appendChild(newName);
+
+        // Description
+        
+        const newDescription = document.createElement("p")
+        newDescription.append(couch.description);
+        newArticle.appendChild(newDescription);
 
         // Prix
 
         const newPrice = document.createElement("p")
         newPrice.append(couch.price + '€');
-        newDiv.appendChild(newPrice);
+        newArticle.appendChild(newPrice);
         
         
         })
