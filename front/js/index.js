@@ -8,11 +8,13 @@ function items() {
         console.log(response2)
         // Boucle response sur canapés
         response2.forEach(couch => {
-        const newHover = document.createElement("a")
+        const newHover = document.createElement("a");
         const newArticle = document.createElement("article");
         let elt = document.getElementById("items");
         elt.appendChild(newHover);
         newHover.appendChild(newArticle);
+        newHover.classList.add('product');
+        
         
 
         // Image
@@ -40,6 +42,10 @@ function items() {
         const newPrice = document.createElement("p")
         newPrice.append(couch.price + '€');
         newArticle.appendChild(newPrice);
+
+        // URL par produit
+
+        newHover.href = "./product.html?" + _id;
         
         
         })
