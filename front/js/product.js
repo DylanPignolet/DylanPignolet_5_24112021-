@@ -1,8 +1,7 @@
-const params = new URLSearchParams(window.location.search)
-let _id = params.get('_id');
+let params = new URL(window.location.href).searchParams;
+let id = params.get('id');
 
-
-    fetch('http://localhost:3000/api/'+ _id)
+    fetch('http://localhost:3000/api/'+ id)
         .then((response) => {
             return response.json()
     })

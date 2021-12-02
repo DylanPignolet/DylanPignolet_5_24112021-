@@ -45,7 +45,7 @@ function items() {
 
         // URL par produit
 
-        newHover.href = "./product.html?_id=";
+        newHover.href = "./product.html?id=${couch._id=}";
         
         
         })
