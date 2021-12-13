@@ -21,7 +21,7 @@ function items() {
 
         var image = document.createElement("img");
         image.src = couch.imageUrl;
-        image.alt = couch.altTxt
+        image.alt = couch.altTxt;
         newArticle.appendChild(image);
         
 
