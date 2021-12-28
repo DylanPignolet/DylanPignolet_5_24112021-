@@ -7,3 +7,4 @@ function getCookieByName(name)
     else{
         return null
     }
+}

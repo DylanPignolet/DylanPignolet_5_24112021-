@@ -38,52 +38,47 @@ fetch("http://localhost:3000/api/products/" + id)
 // Ajouter produit au panier https://stackoverflow.com/questions/10730362/get-cookie-by-name
 
         addButton.onclick = ('click', function () {
-            let cart = getCookieByName("cart")
             let couchColor = colors.value
             let couchQuantity = quantity.value
+
+            if(couchColor === "") {
+                alert("Veuillez remplir les champs recquis.")
+                return
+            }
+            if(couchQuantity < 1 || couchQuantity > 100) {
+                alert("Veuillez ...")
+                return
+            }
+
             let product = {
                 id: id,
                 image: couch.imageUrl,
                 alt: couch.altTxt,
                 name: title.textContent,
+                description: description.textContent,
                 price: price.textContent,
                 color: couchColor,
                 quantity: couchQuantity,
               };
+              // couch.color = couchColor
+            let cart = getCookieByName("cart")
+
             if(cart === null || cart === "null") {
-                if(colors.value === "" || quantity.value === "0") {
-                    alert("Veuillez remplir les champs recquis.")
-                }
-                else {
-                    cart = []
-                    cart.push(product)
-                    document.cookie = "cart=" + JSON.stringify(cart)+";"
-                }
+                cart = []
+                cart.push(product)
+                document.cookie = "cart=" + JSON.stringify(cart)+";"
+            
             } else {
-                if(colors.value === "" || quantity.value === "0") {
-                    alert("Veuillez remplir les champs recquis.")
-                }
-                else {
-                    cart = JSON.parse(cart)
-                    cart.push(product)
-                    document.cookie = "cart=" + JSON.stringify(cart)+";"
-                }
+                cart = JSON.parse(cart)
+                cart.push(product)
+                document.cookie = "cart=" + JSON.stringify(cart)+";"
+                
             }
             console.log(cart)
             })
         })
     }
-    
-    function getCookieByName(name)
-    {
-    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) {
-        return match[2];
-    }
-    else{
-        return null
-    }
-}
+
    
 
 
