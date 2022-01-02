@@ -1,5 +1,12 @@
 let cart = JSON.parse(getCookieByName("cart"));
 
+// Récupération id des canapés
+let products = []
+for (i = 0; i < cart.length; i++) {
+  products.push(cart[i].id);
+  console.log(products)
+}
+
 let cartItems = document.getElementById("cart__items");
 
 for (let product = 0; product < cart.length; product++) {
@@ -153,8 +160,8 @@ function orderBtnToSendForm() {
   order.addEventListener('click', (event) => {
     event.preventDefault()
   
-  let formInformation = getCookieByName('contact')
-  formInformation = {
+  let contact = getCookieByName('contact')
+  contact = {
     firstName : firstName.value,
     lastName : lastName.value,
     address : address.value,
@@ -165,7 +172,7 @@ function orderBtnToSendForm() {
   // Vérifications des inputs
 
   function firstNameCheck() {
-    let firstNameVerification = formInformation.firstName
+    let firstNameVerification = contact.firstName
     let nameRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
     
     if (nameRegExp.test(firstNameVerification)) {
@@ -179,7 +186,7 @@ function orderBtnToSendForm() {
   firstNameCheck()
 
   function lastNameCheck() {
-    let lastNameVerification = formInformation.lastName
+    let lastNameVerification = contact.lastName
     let nameRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
     
     if (nameRegExp.test(lastNameVerification)) {
@@ -193,7 +200,7 @@ function orderBtnToSendForm() {
   lastNameCheck()
 
   function addressCheck() {
-    let addressVerification = formInformation.address
+    let addressVerification = contact.address
     let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+")
     
     if (addressRegExp.test(addressVerification)) {
@@ -207,7 +214,7 @@ function orderBtnToSendForm() {
   addressCheck()
 
   function cityCheck() {
-    let cityVerification = formInformation.city
+    let cityVerification = contact.city
     let cityRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
     
     if (cityRegExp.test(cityVerification)) {
@@ -221,7 +228,7 @@ function orderBtnToSendForm() {
   cityCheck()
 
   function emailCheck() {
-    let emailVerification = formInformation.email
+    let emailVerification = contact.email
     let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')
     
     if (emailRegExp.test(emailVerification)) {
@@ -236,19 +243,36 @@ function orderBtnToSendForm() {
 
   function formIntoCookie() {
     if(firstNameCheck() && lastNameCheck() && addressCheck() && cityCheck() && emailCheck()) {
-      document.cookie = "contact=" + JSON.stringify(formInformation) + ";";
-      alert('aoihdzpa')
+      document.cookie = "contact=" + JSON.stringify(contact) + ";";
+      alert('Commande effectuée')
     }
     else {
       alert('Veuillez remplir les champs obligatoires')
     }
   }
   formIntoCookie()
-
+  
   let cookieOrder = {
-    cart,
-    formInformation,
+    contact,
+    products,
   }
+
+  // https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
+  
+  let post = {
+    method: 'POST',
+    body: JSON.stringify(cookieOrder),
+    headers: { 
+      'Content-Type': 'application/json',
+    }
+  }
+
+  fetch("http://localhost:3000/api/products/order", post)
+  .then(response => response.json())
+  .then(data => {
+    document.cookie = 'orderId=' + data.orderId + ';'
+    document.location.href = 'confirmation.html?id='+ data.orderId;
+  })
   })
 }
 orderBtnToSendForm()
