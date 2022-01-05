@@ -156,12 +156,15 @@ let city = document.getElementById('city')
 let email = document.getElementById('email')
 let order = document.getElementById('order')
 
+// event clic sur le bouton commander
+
 function orderBtnToSendForm() {
   order.addEventListener('click', (event) => {
     event.preventDefault()
-  
-  let contact = getCookieByName('contact')
-  contact = {
+
+// Création objet contact 
+
+  let contact =  {
     firstName : firstName.value,
     lastName : lastName.value,
     address : address.value,
@@ -171,84 +174,38 @@ function orderBtnToSendForm() {
 
   // Vérifications des inputs
 
-  function firstNameCheck() {
-    let firstNameVerification = contact.firstName
-    let nameRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
-    
-    if (nameRegExp.test(firstNameVerification)) {
-      return true
-    }
-    else {
-      let firstNameErrorMsg = document.getElementById('firstNameErrorMsg')
-      firstNameErrorMsg.innerText = 'Veuillez saisir un prénom correct'
-    }
-  }
-  firstNameCheck()
+  isFirstNameValid()
+  isLastNameValid()
+  isAddressValid()
+  isCityValid()
+  isEmailValid()
 
-  function lastNameCheck() {
-    let lastNameVerification = contact.lastName
-    let nameRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
-    
-    if (nameRegExp.test(lastNameVerification)) {
-      return true
-    }
-    else {
-      let lastNameErrorMsg = document.getElementById('lastNameErrorMsg')
-      lastNameErrorMsg.innerText = 'Veuillez saisir un nom correct'
-    }
+  if(!isFirstNameValid(contact.firstName)) {
+    showError('firstNameErrorMsg','Veuillez saisir un prénom correct')
+    return
   }
-  lastNameCheck()
+  if(!isLastNameValid(contact.lastName)) {
+    showError('lastNameErrorMsg','Veuillez saisir un nom correct')
+    return
+  }
+  if(!isAddressValid(contact.address)) {
+    showError('addressErrorMsg','Veuillez saisir une adresse correcte')
+    return
+  }
+  if(!isCityValid(contact.city)) {
+    showError('cityErrorMsg','Veuillez saisir une ville correcte')
+    return
+  }
+  if(!isEmailValid(contact.email)) {
+    showError('emailErrorMsg','Veuillez saisir une adresse mail correcte')
+    return
+  }
 
-  function addressCheck() {
-    let addressVerification = contact.address
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+")
-    
-    if (addressRegExp.test(addressVerification)) {
-      return true
-    }
-    else {
-      let addressErrorMsg = document.getElementById('addressErrorMsg')
-      addressErrorMsg.innerText = 'Veuillez saisir une adresse correcte'
-    }
-  }
-  addressCheck()
-
-  function cityCheck() {
-    let cityVerification = contact.city
-    let cityRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
-    
-    if (cityRegExp.test(cityVerification)) {
-      return true
-    }
-    else {
-      let cityErrorMsg = document.getElementById('cityErrorMsg')
-      cityErrorMsg.innerText = 'Veuillez saisir une ville correcte'
-    }
-  }
-  cityCheck()
-
-  function emailCheck() {
-    let emailVerification = contact.email
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')
-    
-    if (emailRegExp.test(emailVerification)) {
-      return true
-    }
-    else {
-      let emailErrorMsg = document.getElementById('emailErrorMsg')
-      emailErrorMsg.innerText = 'Veuillez saisir une adresse mail correcte'
-    }
-  }
-  emailCheck()
+  // Création cookie contact si champs remplis correctement
 
   function formIntoCookie() {
-    if(firstNameCheck() && lastNameCheck() && addressCheck() && cityCheck() && emailCheck()) {
       document.cookie = "contact=" + JSON.stringify(contact) + ";";
       alert('Commande effectuée')
-    }
-    else {
-      alert('Veuillez remplir les champs obligatoires')
-    }
   }
   formIntoCookie()
   
@@ -270,9 +227,37 @@ function orderBtnToSendForm() {
   fetch("http://localhost:3000/api/products/order", post)
   .then(response => response.json())
   .then(data => {
-    document.cookie = 'orderId=' + data.orderId + ';'
+    document.cookie = "cart= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+    document.cookie = "contact= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     document.location.href = 'confirmation.html?id='+ data.orderId;
+    
   })
   })
 }
 orderBtnToSendForm()
+
+// Fonctions regexp formulaire
+
+function isFirstNameValid(firstNameVerification) {
+  return new RegExp("^[a-zA-Z ,.'-]+$").test(firstNameVerification)
+}
+
+function isLastNameValid(lastNameVerification) {
+  return new RegExp("^[a-zA-Z ,.'-]+$").test(lastNameVerification)
+}
+
+function isAddressValid(addressVerification) {
+  return new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+").test(addressVerification)
+}
+
+function isCityValid(cityVerification) {
+  return new RegExp("^[a-zA-Z ,.'-]+$").test(cityVerification)
+}
+
+function isEmailValid(emailVerification) {
+  return new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$').test(emailVerification)
+}
+
+function showError(errorId, errorMsg) {
+  document.getElementById(errorId).innerText = errorMsg 
+}
