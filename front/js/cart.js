@@ -197,10 +197,6 @@ function orderBtnToSendForm() {
 
     // Création cookie contact si champs remplis correctement
 
-    function formIntoCookie() {
-      document.cookie = "contact=" + JSON.stringify(contact) + ";";
-      alert("Commande effectuée");
-    }
     formIntoCookie();
 
     let cookieOrder = {
@@ -257,4 +253,11 @@ function isEmailValid(emailVerification) {
 
 function showError(errorId, errorMsg) {
   document.getElementById(errorId).innerText = errorMsg;
+}
+
+// Fonction création cookie contact
+
+function formIntoCookie(contact) {
+  document.cookie = "contact=" + JSON.stringify(contact) + ";";
+  alert("Commande effectuée");
 }
