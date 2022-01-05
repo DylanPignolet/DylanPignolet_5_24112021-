@@ -1,10 +1,10 @@
 let cart = JSON.parse(getCookieByName("cart"));
 
 // Récupération id des canapés
-let products = []
+let products = [];
 for (i = 0; i < cart.length; i++) {
   products.push(cart[i].id);
-  console.log(products)
+  console.log(products);
 }
 
 let cartItems = document.getElementById("cart__items");
@@ -33,12 +33,12 @@ for (let product = 0; product < cart.length; product++) {
   deleteProduct.addEventListener("click", (event) => {
     event.preventDefault();
 
-    cart.splice(product, 1)
+    cart.splice(product, 1);
 
-    document.cookie = "cart=" + JSON.stringify(cart) + ";"; 
+    document.cookie = "cart=" + JSON.stringify(cart) + ";";
 
     // window.location.reload();
-    document.getElementById(product).remove()
+    document.getElementById(product).remove();
     showCouchQty();
     showTotalPrice();
   });
@@ -113,7 +113,6 @@ function showCouchQty() {
   let totalProduct = document.getElementById("totalQuantity");
   totalProduct.textContent = totalQty;
 }
-showCouchQty();
 
 function showTotalPrice() {
   let cart = JSON.parse(getCookieByName("cart"));
@@ -124,7 +123,6 @@ function showTotalPrice() {
   const totalPrice = document.getElementById("totalPrice");
   totalPrice.textContent = total;
 }
-showTotalPrice();
 
 // Ajout de quantité et prix
 
@@ -147,117 +145,116 @@ function addQte() {
     });
   }
 }
+showCouchQty();
+showTotalPrice();
 addQte();
 
-let firstName = document.getElementById('firstName')
-let lastName = document.getElementById('lastName')
-let address = document.getElementById('address')
-let city = document.getElementById('city')
-let email = document.getElementById('email')
-let order = document.getElementById('order')
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let address = document.getElementById("address");
+let city = document.getElementById("city");
+let email = document.getElementById("email");
+let order = document.getElementById("order");
 
 // event clic sur le bouton commander
 
 function orderBtnToSendForm() {
-  order.addEventListener('click', (event) => {
-    event.preventDefault()
+  order.addEventListener("click", (event) => {
+    event.preventDefault();
 
-// Création objet contact 
+    // Création objet contact
 
-  let contact =  {
-    firstName : firstName.value,
-    lastName : lastName.value,
-    address : address.value,
-    city : city.value,
-    email : email.value
-  }
+    let contact = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      address: address.value,
+      city: city.value,
+      email: email.value,
+    };
 
-  // Vérifications des inputs
+    // Vérifications des inputs
 
-  isFirstNameValid()
-  isLastNameValid()
-  isAddressValid()
-  isCityValid()
-  isEmailValid()
-
-  if(!isFirstNameValid(contact.firstName)) {
-    showError('firstNameErrorMsg','Veuillez saisir un prénom correct')
-    return
-  }
-  if(!isLastNameValid(contact.lastName)) {
-    showError('lastNameErrorMsg','Veuillez saisir un nom correct')
-    return
-  }
-  if(!isAddressValid(contact.address)) {
-    showError('addressErrorMsg','Veuillez saisir une adresse correcte')
-    return
-  }
-  if(!isCityValid(contact.city)) {
-    showError('cityErrorMsg','Veuillez saisir une ville correcte')
-    return
-  }
-  if(!isEmailValid(contact.email)) {
-    showError('emailErrorMsg','Veuillez saisir une adresse mail correcte')
-    return
-  }
-
-  // Création cookie contact si champs remplis correctement
-
-  function formIntoCookie() {
-      document.cookie = "contact=" + JSON.stringify(contact) + ";";
-      alert('Commande effectuée')
-  }
-  formIntoCookie()
-  
-  let cookieOrder = {
-    contact,
-    products,
-  }
-
-  // https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
-  
-  let post = {
-    method: 'POST',
-    body: JSON.stringify(cookieOrder),
-    headers: { 
-      'Content-Type': 'application/json',
+    if (!isFirstNameValid(contact.firstName)) {
+      showError("firstNameErrorMsg", "Veuillez saisir un prénom correct");
+      return;
     }
-  }
+    if (!isLastNameValid(contact.lastName)) {
+      showError("lastNameErrorMsg", "Veuillez saisir un nom correct");
+      return;
+    }
+    if (!isAddressValid(contact.address)) {
+      showError("addressErrorMsg", "Veuillez saisir une adresse correcte");
+      return;
+    }
+    if (!isCityValid(contact.city)) {
+      showError("cityErrorMsg", "Veuillez saisir une ville correcte");
+      return;
+    }
+    if (!isEmailValid(contact.email)) {
+      showError("emailErrorMsg", "Veuillez saisir une adresse mail correcte");
+      return;
+    }
 
-  fetch("http://localhost:3000/api/products/order", post)
-  .then(response => response.json())
-  .then(data => {
-    document.cookie = "cart= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-    document.cookie = "contact= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-    document.location.href = 'confirmation.html?id='+ data.orderId;
-    
-  })
-  })
+    // Création cookie contact si champs remplis correctement
+
+    function formIntoCookie() {
+      document.cookie = "contact=" + JSON.stringify(contact) + ";";
+      alert("Commande effectuée");
+    }
+    formIntoCookie();
+
+    let cookieOrder = {
+      contact,
+      products,
+    };
+
+    // https://stackoverflow.com/questions/6396101/pure-javascript-send-post-data-without-a-form
+
+    let post = {
+      method: "POST",
+      body: JSON.stringify(cookieOrder),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch("http://localhost:3000/api/products/order", post)
+      .then((response) => response.json())
+      .then((data) => {
+        document.cookie = "cart= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "contact= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+        document.location.href = "confirmation.html?id=" + data.orderId;
+      });
+  });
 }
-orderBtnToSendForm()
+orderBtnToSendForm();
 
 // Fonctions regexp formulaire
 
 function isFirstNameValid(firstNameVerification) {
-  return new RegExp("^[a-zA-Z ,.'-]+$").test(firstNameVerification)
+  return new RegExp("^[a-zA-Z ,.'-]+$").test(firstNameVerification);
 }
 
 function isLastNameValid(lastNameVerification) {
-  return new RegExp("^[a-zA-Z ,.'-]+$").test(lastNameVerification)
+  return new RegExp("^[a-zA-Z ,.'-]+$").test(lastNameVerification);
 }
 
 function isAddressValid(addressVerification) {
-  return new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+").test(addressVerification)
+  return new RegExp(
+    "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+"
+  ).test(addressVerification);
 }
 
 function isCityValid(cityVerification) {
-  return new RegExp("^[a-zA-Z ,.'-]+$").test(cityVerification)
+  return new RegExp("^[a-zA-Z ,.'-]+$").test(cityVerification);
 }
 
 function isEmailValid(emailVerification) {
-  return new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$').test(emailVerification)
+  return new RegExp(
+    "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+  ).test(emailVerification);
 }
 
 function showError(errorId, errorMsg) {
-  document.getElementById(errorId).innerText = errorMsg 
+  document.getElementById(errorId).innerText = errorMsg;
 }
