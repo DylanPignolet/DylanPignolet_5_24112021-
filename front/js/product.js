@@ -1,7 +1,10 @@
 // Création nouvelle URL à l'aide de l'id de chaque produit
 
 let params = new URL(window.location.href).searchParams;
-let id = params.get("id");
+let id = params.get("id")
+if (id === "") {
+  alert('Produit inconnu')
+}
 
 // Création variables pour éléments canapé
 let image = document.getElementsByClassName("item__img");
@@ -48,7 +51,7 @@ function item() {
             return;
           }
           if (couchQuantity < 1 || couchQuantity > 100) {
-            alert("Veuillez ...");
+            alert("Veuillez sélectionner une quantité");
             return;
           }
 
@@ -71,12 +74,22 @@ function item() {
             document.cookie = "cart=" + JSON.stringify(cart) + ";";
           } else {
             cart = JSON.parse(cart);
-            cart.push(product);
-            document.cookie = "cart=" + JSON.stringify(cart) + ";";
+            addCart = false;
+            cart.forEach((product) => {
+              if (product.id === id && product.color === couchColor) {
+                product.quantity = parseInt(product.quantity) + parseInt(couchQuantity);
+                document.cookie = "cart=" + JSON.stringify(cart) + ";";
+                addCart = true;
+              }
+            });
+            if (!addCart) {
+              cart.push(product);
+              document.cookie = "cart=" + JSON.stringify(cart) + ";";
+            }
           }
           console.log(cart);
-        });
-    });
+        })
+    })
 }
 
-item();
+item()
